@@ -1,0 +1,92 @@
+<html>
+ <head>
+ <title> Pong </title>
+  <script src="simply.js"> </script>  
+  <script>  
+  
+   function run(){
+    //open the canvas
+    sjs.open("target", 300, 400);
+	//opening splash screen or loading screen
+	var welcome_txt = new sjs.Text("hello and welcome to our game.");
+	welcome_txt.center().offset(0,-50);
+	
+	//set up all the things
+	var bobbyTheBall = new sjs.Image("Images/planet.png");
+	bobbyTheBall.type = "ball";
+	bobbyTheBall.friction = 0;
+	bobbyTheBall.setSize(100,100);
+	console.log(bobbyTheBall.getWidth());
+	
+	
+	var patriciaThePaddle = new sjs.Image("Images/pink.png");
+	patriciaThePaddle.type = "paddle";
+	patriciaThePaddle.friction = .4;
+	patriciaThePaddle.setSize(150,18);
+	
+	var patriciaThePaddle2 = new sjs.Image("Images/pink.png");
+	patriciaThePaddle2.type = "paddle";
+	patriciaThePaddle2.friction = .4;
+	patriciaThePaddle2.setSize(18,150);
+	
+	var score = 0;
+	var score_txt = new sjs.Text("Score: "+score, 21, "orange");
+	score_txt.center();
+	
+	var sound = new Audio('Music/signal.mp3');
+	
+	//put stuff places 
+	bobbyTheBall.center();
+	patriciaThePaddle.centerH();
+	patriciaThePaddle2.centerV().left();
+	
+	
+	console.log(bobbyTheBall.getY());
+	
+	bobbyTheBall.pushUp(5);
+	bobbyTheBall.pushRight(5);
+	console.log(bobbyTheBall.getY());
+	
+	bobbyTheBall.bounce();
+	
+	//move the paddles
+	sjs.keyDown(UP_KEY, function(){
+		patriciaThePaddle2.pushUp(2);
+		});
+	sjs.keyDown(DOWN_KEY, function(){
+		patriciaThePaddle2.pushDown(2);
+		});
+	patriciaThePaddle.followx(sjs.mouse);
+	
+	//hit detection! where the game happens
+	sjs.onHit("ball", "paddle", function(ball, paddle){
+		sjs.bounceOff(ball, paddle);
+		//paddle.destroy();
+		score++;
+		score_txt.setText("A Score: "+score);
+		//add sound effect
+		///sound.play();
+		});
+	sjs.onHit("ball", ["top_screen" , "left_screen"], function(ball, edge){
+		sjs.bounceOff(ball, edge);
+		score--;
+		score_txt.setText("A Score: "+score);
+		if(score <= 0){
+			window.location = "gameOver.html";
+			}
+		});
+	//how do we track the wall hit?
+	
+    }//end run function
+   
+   
+  </script>  
+ </head>  
+
+ <body onload="run()">
+	<h1>Pong</h1>
+  <div id="target" style="margin:auto;background:lightgrey;">
+  </div>
+ </body>
+ 
+</html>
